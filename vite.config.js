@@ -1,10 +1,11 @@
 import { defineConfig } from 'vite';
 import { visualizer } from 'rollup-plugin-visualizer';
+import path from 'node:path'
 
 export default defineConfig({
   esbuild: {
-    jsxFactory: 'h',
-    jsxFragment: 'Fragment'
+    jsx: 'automatic',
+    jsxImportSource: `${path.resolve(__dirname, 'lib')}/dist`
   },
   server: {
     port: 5173,

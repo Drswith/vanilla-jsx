@@ -23,9 +23,6 @@ importers:
       rollup-plugin-visualizer:
         specifier: ^5.14.0
         version: 5.14.0(rollup@3.29.5)
-      terser:
-        specifier: ^5.39.0
-        version: 5.39.0
       vite:
         specifier: ^4.4.5
         version: 4.5.13(@types/node@22.15.2)(terser@5.39.0)
@@ -992,6 +989,7 @@ snapshots:
     dependencies:
       '@jridgewell/gen-mapping': 0.3.8
       '@jridgewell/trace-mapping': 0.3.25
+    optional: true
 
   '@jridgewell/sourcemap-codec@1.5.0': {}
 
@@ -1090,7 +1088,8 @@ snapshots:
       balanced-match: 1.0.2
       concat-map: 0.0.1
 
-  buffer-from@1.1.2: {}
+  buffer-from@1.1.2:
+    optional: true
 
   cac@6.7.14: {}
 
@@ -1120,7 +1119,8 @@ snapshots:
 
   color-name@1.1.4: {}
 
-  commander@2.20.3: {}
+  commander@2.20.3:
+    optional: true
 
   concat-map@0.0.1: {}
 
@@ -1425,6 +1425,7 @@ snapshots:
     dependencies:
       buffer-from: 1.1.2
       source-map: 0.6.1
+    optional: true
 
   source-map@0.6.1: {}
 
@@ -1460,6 +1461,7 @@ snapshots:
       acorn: 8.14.1
       commander: 2.20.3
       source-map-support: 0.5.21
+    optional: true
 
   test-exclude@6.0.0:
     dependencies:
