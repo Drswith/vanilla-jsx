@@ -71,6 +71,7 @@
     "dist"
   ],
   "scripts": {
+    "preinstall": "npx only-allow pnpm",
     "dev": "tsdown --watch",
     "build": "tsdown",
     "test": "vitest run",
