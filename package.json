@@ -2,6 +2,7 @@
   "name": "vanilla-jsx",
   "type": "module",
   "version": "0.0.0",
+  "packageManager": "pnpm@10.15.0",
   "description": "Vanilla JSX is a library for building user interfaces with JavaScript/TypeScript and JSX/TSX syntax.",
   "author": "Drswith",
   "license": "MIT",
@@ -9,6 +10,10 @@
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Drswith/vanilla-jsx.git"
+  },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org"
   },
   "bugs": {
     "url": "https://github.com/Drswith/vanilla-jsx/issues"
