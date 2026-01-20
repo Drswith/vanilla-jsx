@@ -1,63 +1,232 @@
-# vite-vanilla-jsx
+# vanilla-jsx
 
-一个使用 Vite 和 Vanilla JS (支持 JSX) 构建的简单前端项目模板。
+**[English](./README.md)** | [简体中文](./README.zh-CN.md)
 
-## ✨ 特性
+A lightweight library for building user interfaces with JavaScript/TypeScript and JSX/TSX syntax, featuring SolidJS-style fine-grained reactivity.
 
-*   ⚡️ [Vite](https://vitejs.dev/) - 下一代前端构建工具
-*   🍦 Vanilla JS - 无框架，纯粹的 JavaScript
-*   jsx - 在 JavaScript 文件中直接编写类似 HTML 的标记
-*   🧪 [Vitest](https://vitest.dev/) - 由 Vite 驱动的极速单元测试框架
-*   📦 使用 [pnpm](https://pnpm.io/) 进行包管理 (推荐)
+## ✨ Features
 
-## 🚀 开始使用
+- ⚡️ **Fine-Grained Reactivity** - SolidJS-style signals and effects, components run once, only DOM nodes update
+- 🍦 **No Virtual DOM** - Direct DOM manipulation for better performance
+- 📦 **Tiny Bundle Size** - Zero dependencies, minimal footprint
+- 🎯 **Full TypeScript Support** - Complete type definitions for JSX
+- 🔧 **Event Delegation** - Efficient event handling with delegated and native event support
+- 🎨 **Reactive Attributes** - Dynamic class, style, and attribute bindings
 
-### 1. 安装依赖
-
-推荐使用 `pnpm`：
-
-```bash
-pnpm install
-```
-
-或者，如果你使用 `npm` 或 `yarn`：
+## 📦 Installation
 
 ```bash
-npm install
-# 或者
-yarn install
+npm install vanilla-jsx
+# or
+pnpm add vanilla-jsx
+# or
+yarn add vanilla-jsx
 ```
 
-## 📜 可用脚本
+## 🚀 Quick Start
 
-在项目目录中，你可以运行以下命令 (基于 `package.json` 中的 `scripts`):
+### Configure JSX
 
-### `pnpm dev`
+**tsconfig.json:**
 
-启动开发服务器。在浏览器中打开 Vite 提示的本地地址 (通常是 [http://localhost:5173](http://localhost:5173)) 查看。
+```json
+{
+  "compilerOptions": {
+    "jsx": "react-jsx",
+    "jsxImportSource": "vanilla-jsx"
+  }
+}
+```
 
-### `pnpm build`
+**vite.config.ts:**
 
-将项目构建到 `dist` 目录，用于生产环境。
+```ts
+import { defineConfig } from 'vite'
 
-### `pnpm preview`
+export default defineConfig({
+  esbuild: {
+    jsx: 'automatic',
+    jsxImportSource: 'vanilla-jsx',
+  },
+})
+```
 
-在本地预览生产构建的成果。
+### Basic Example
 
-### `pnpm test`
+```tsx
+import { createSignal, render } from 'vanilla-jsx'
 
-运行 Vitest 测试。
+function Counter() {
+  const [count, setCount] = createSignal(0)
 
-### `pnpm test:coverage`
+  return (
+    <div>
+      <p>
+        Count:
+        {count}
+      </p>
+      <button onClick={() => setCount(c => c + 1)}>Increment</button>
+    </div>
+  )
+}
 
-运行 Vitest 测试并生成覆盖率报告。
+render(() => <Counter />, document.getElementById('app')!)
+```
 
-## 📄 许可证
+## 📖 API Reference
 
-本项目采用 [MIT](./LICENSE) 许可证
+### Reactivity
 
-## 🤝 贡献
+#### `createSignal<T>(initialValue: T)`
 
-欢迎提交 Pull Request。对于重大更改，请先打开一个 issue 来讨论您想要更改的内容。
+Creates a reactive signal with a getter and setter.
 
----
+```tsx
+const [count, setCount] = createSignal(0)
+
+// Read value
+console.log(count()) // 0
+
+// Update value
+setCount(1)
+setCount(prev => prev + 1)
+```
+
+#### `createEffect(callback)`
+
+Creates a reactive effect that re-runs when its dependencies change.
+
+```tsx
+const [count, setCount] = createSignal(0)
+
+createEffect(() => {
+  console.log('Count changed:', count())
+})
+
+setCount(1) // logs: "Count changed: 1"
+```
+
+#### `createMemo<T>(compute)`
+
+Creates a memoized computed value that only recalculates when dependencies change.
+
+```tsx
+const [count, setCount] = createSignal(0)
+const doubled = createMemo(() => count() * 2)
+
+console.log(doubled()) // 0
+setCount(5)
+console.log(doubled()) // 10
+```
+
+#### `batch(fn)`
+
+Batches multiple signal updates into a single effect execution.
+
+```tsx
+batch(() => {
+  setA(1)
+  setB(2)
+}) // Effects run only once after both updates
+```
+
+### Rendering
+
+#### `render(component, container)`
+
+Renders a component into a container element.
+
+```tsx
+render(() => <App />, document.getElementById('app')!)
+```
+
+### Event Handling
+
+#### Delegated Events
+
+Common events are delegated for better performance. Both camelCase and lowercase are supported.
+
+```tsx
+<button onClick={() => console.log('clicked')}>Click me</button>
+<button onclick={() => console.log('clicked')}>Click me</button>
+```
+
+**Delegated events list:**
+`beforeinput`, `click`, `dblclick`, `contextmenu`, `focusin`, `focusout`, `input`, `keydown`, `keyup`, `mousedown`, `mousemove`, `mouseout`, `mouseover`, `mouseup`, `pointerdown`, `pointermove`, `pointerout`, `pointerover`, `pointerup`, `touchend`, `touchmove`, `touchstart`
+
+#### Bound Events
+
+SolidJS-style bound events with data parameter.
+
+```tsx
+function handleClick(data: string, event: MouseEvent) {
+  console.log('Data:', data, 'Event:', event.type)
+}
+
+<button onClick={[handleClick, 'Hello!']}>Click me</button>
+```
+
+#### Native Events
+
+Use `on:eventname` for native events (case-sensitive, direct binding).
+
+```tsx
+<div on:scroll={e => console.log('scrolled')}>Scroll me</div>
+```
+
+### Reactive Attributes
+
+Attributes can accept accessor functions for reactive updates.
+
+```tsx
+const [isActive, setIsActive] = createSignal(false)
+
+<div className={() => isActive() ? 'active' : 'inactive'}>
+  Status: {() => isActive() ? 'Active' : 'Inactive'}
+</div>
+```
+
+### Components
+
+Components are functions that receive props. **Important:** Do not destructure props to preserve reactivity.
+
+```tsx
+interface DisplayProps {
+  value: () => number // Accessor type
+}
+
+function Display(props: DisplayProps) {
+  // ✅ Pass accessor directly
+  return (
+    <p>
+      Value:
+      {props.value}
+    </p>
+  )
+}
+
+function App() {
+  const [count, setCount] = createSignal(0)
+  // Pass the signal getter (accessor) to child component
+  return <Display value={count} />
+}
+```
+
+## 📜 Scripts
+
+| Script | Description |
+| --- | --- |
+| `pnpm dev` | Start development mode with watch |
+| `pnpm build` | Build the library for production |
+| `pnpm test` | Run tests |
+| `pnpm test:coverage` | Run tests with coverage report |
+| `pnpm lint` | Run ESLint |
+| `pnpm lint:fix` | Run ESLint with auto-fix |
+
+## 📄 License
+
+[MIT](./LICENSE)
+
+## 🤝 Contributing
+
+Contributions are welcome! Please open an issue first to discuss what you would like to change.
